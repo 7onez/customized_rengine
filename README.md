@@ -22,6 +22,7 @@
 </p>
 
 <h3>reNgine 2.0<br>More than just recon! Fixed by Hieupc</h3>
+<h3>reNgine 2.0<br>Setup introduction is here: https://rengine.wiki/install/detailed/#rengine-installation</h3>
 <h4>The only web application recon tool you will ever need!</h4>
 
 <p>Quickly discover the attack surface, and identify vulnerabilities using highly customizable and powerful scan engines.
