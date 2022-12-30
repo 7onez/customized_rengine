@@ -13,8 +13,7 @@ import csv
 import requests
 import platform
 import ssl
-
-ssl._create_default_https_context = ssl._create_unverified_context
+context = ssl._create_unverified_context() urllib.request.urlopen(req,context=context)
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-surface_scan", help="Run surface scan only")
