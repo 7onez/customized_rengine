@@ -142,7 +142,7 @@ def appendToVulns(line):
 
 def download_cve_csv():
     url = "https://cve.mitre.org/data/downloads/allitems.csv"
-    filename = wget.download(url,verify=False)
+    filename = wget.download(url)
     print("\n[+] Downloaded CVE CSV file as: " + filename)
     with open(filename, "r", encoding="Latin-1") as rfh:
         csvread = csv.reader(rfh)
