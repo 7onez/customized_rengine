@@ -12,8 +12,6 @@ import shutil
 import csv
 import requests
 import platform
-import ssl
-context = ssl._create_unverified_context() urllib.request.urlopen(req,context=context)
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-surface_scan", help="Run surface scan only")
@@ -144,7 +142,7 @@ def appendToVulns(line):
 
 def download_cve_csv():
     url = "https://cve.mitre.org/data/downloads/allitems.csv"
-    filename = wget.download(url)
+    filename = wget.download(url,verify=False)
     print("\n[+] Downloaded CVE CSV file as: " + filename)
     with open(filename, "r", encoding="Latin-1") as rfh:
         csvread = csv.reader(rfh)
@@ -268,7 +266,7 @@ def surface_scan_handler():
 
 def end_of_life_check(product):
     url = "https://endoflife.date/api/{product}.json"
-    req = requests.get(url.format(product=product))
+    req = requests.get(url.format(product=product),verify=False)
     if req.status_code == 200:
       data = req.json()
       if data:
@@ -346,9 +344,3 @@ if __name__=="__main__":
             print("Time taken for end of life scan: {} seconds".format(round(time.time()-start, 3)))
     else:
         print("[-] This workload script only works on Linux for now")
-        
-
-
-
-
-
