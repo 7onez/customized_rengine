@@ -14,11 +14,10 @@ import requests
 import platform
 import requests
 from urllib3.exceptions import InsecureRequestWarning
+import urllib3`urllib3.disable_warnings()
 
 # Suppress only the single warning from urllib3 needed.
 requests.packages.urllib3.disable_warnings(category=InsecureRequestWarning)
-ssl.SSLContext.verify_mode = property(lambda self: ssl.CERT_NONE, lambda self, newval: None)
-
 parser = argparse.ArgumentParser()
 parser.add_argument("-surface_scan", help="Run surface scan only")
 parser.add_argument("-deep_scan",help="Run deep scan only")
