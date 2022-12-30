@@ -266,7 +266,7 @@ def surface_scan_handler():
 
 def end_of_life_check(product):
     url = "https://endoflife.date/api/{product}.json"
-    req = requests.get(url.format(product=product),verify=False)
+    req = requests.get(url.format(product=product))
     if req.status_code == 200:
       data = req.json()
       if data:
