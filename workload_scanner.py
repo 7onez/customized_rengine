@@ -12,6 +12,11 @@ import shutil
 import csv
 import requests
 import platform
+import requests
+from urllib3.exceptions import InsecureRequestWarning
+
+# Suppress only the single warning from urllib3 needed.
+requests.packages.urllib3.disable_warnings(category=InsecureRequestWarning)
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-surface_scan", help="Run surface scan only")
