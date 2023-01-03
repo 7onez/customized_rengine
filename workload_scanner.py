@@ -12,11 +12,6 @@ import shutil
 import csv
 import requests
 import platform
-import requests
-from urllib3.exceptions import InsecureRequestWarning
-
-# Suppress only the single warning from urllib3 needed.
-requests.packages.urllib3.disable_warnings(category=InsecureRequestWarning)
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-surface_scan", help="Run surface scan only")
@@ -167,8 +162,7 @@ def git_clone():
     shutil.copy(new_cve_file, repo_name + "/cve.csv")
 
 def link_pwd():
-    os.symlink("scipag_vulscan", "/usr/share/nmap/scripts/vulscan")
-
+    subprocess.run(["ln", "-s", "`pwd`/scipag_vulscan", "/usr/share/nmap/scripts/vulscan"])
 def update_cve_db():
     print("[+] Making things ready for surface scan")
     if os.path.exists("cve.csv"):
@@ -177,9 +171,10 @@ def update_cve_db():
         shutil.rmtree("scipag_vulscan")
     if os.path.exists("allitems.csv"):
         os.remove("allitems.csv")
-    else:
-        download_cve_csv()
-        git_clone()
+    
+    download_cve_csv()
+    #link_pwd()
+    git_clone()
 
 
 def surface_runner():
@@ -191,10 +186,9 @@ def surface_runner():
     port_matcher = re.compile(r'\d+/tcp')
     ports = port_matcher.findall(output)
 
-    ## find all cves between detected ports from nmap output
     
     total_ports = len(ports)
-    ## now iterate through each line of the output and stop when we reach the next port
+    
     for i in range(total_ports):
         port = ports[i]
         cves = []
@@ -263,11 +257,9 @@ def deep_scan_handler():
 
 def surface_scan_handler():
     update_cve_db()
-    if os.path.exists("/usr/share/nmap/scripts/vulscan"):
-        surface_runner()
-        save_report_nmap()
-    else:
-        print("[-] Scan failed surface scan. As vulscan is not installed")
+    surface_runner()
+    save_report_nmap()
+    
 
 def end_of_life_check(product):
     url = "https://endoflife.date/api/{product}.json"
@@ -333,15 +325,9 @@ if __name__=="__main__":
             print("Time taken surface scan: {} seconds".format(round(time.time()-start, 3)))
         if all_scan == "true":
             start = time.time()
-            process1 =  Process(target=surface_scan_handler)
-            process2 = Process(target=deep_scan_handler)
-            process3 = Process(target=eod_scan_handler)
-            process1.start()
-            process2.start()
-            process3.start()
-            process1.join()
-            process2.join()
-            process3.join()
+            surface_scan_handler()
+            deep_scan_handler()
+            eod_scan_handler()
             print("Time taken for workload scan: {} seconds".format(round(time.time()-start, 3)))
         if eod_scan == "true":
             start = time.time()
